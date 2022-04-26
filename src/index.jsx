@@ -8,7 +8,7 @@ import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ClerkProvider frontendApi="clerk.gentle.midge-25.lcl.dev">
+    <ClerkProvider frontendApi={process.env.REACT_APP_FRONTEND_CLERK_API_URL}>
       <BrowserRouter>
         <ChakraProvider>
           <App />
