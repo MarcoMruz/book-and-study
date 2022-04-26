@@ -1,3 +1,14 @@
+# Before you pull to main
+
+- firstly you need to create your own branch from latest version of main branch (git checkout -b <name-of-branch>)
+- on newly created branch you can develop what you want
+- when you are finished you need to create pull request
+- then if there are no conflicts with main branch you can merge your branch with main
+
+## BAD PRACTICE
+
+- never merge your branch with main from command line only in github using pull requests
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
