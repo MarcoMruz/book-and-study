@@ -1,39 +1,59 @@
 import React from "react";
-import { Link, Route, Routes } from "react-router-dom";
-import { Button, HStack } from "@chakra-ui/react";
-import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
+import { Route, Routes } from "react-router-dom";
+import { Container } from "@chakra-ui/react";
+import { UserProfile as UserAccount } from "@clerk/clerk-react";
 import { Home } from "./routes/home";
 import { About } from "./routes/about";
 import { Login } from "./routes/auth/login";
 import { Register } from "./routes/auth/register";
+import { Navigation } from "./components/navigation";
+import { UserProfile } from "./routes/profile/me";
+import { ProtectedRoute } from "./components/protected-route";
+import { NoMatch } from "./routes/no-match";
+import { Settings } from "./routes/profile/settings";
 
 function App() {
   return (
     <>
-      <HStack>
-        <Link to="/">Book &amp; Study</Link>
-        <SignedIn>
-          <UserButton
-            showName
-            userProfileUrl="/profile/me"
-            afterSignOutUrl="/"
-          />
-        </SignedIn>
-        <SignedOut>
-          <Button as={Link} to="/auth/login">
-            Sign in
-          </Button>
-          <Button as={Link} to="/auth/register">
-            Sign up
-          </Button>
-        </SignedOut>
-      </HStack>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/auth/login" element={<Login />} />
-        <Route path="/auth/register" element={<Register />} />
-      </Routes>
+      <Navigation />
+      <Container maxW="5xl">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/auth">
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+          </Route>
+
+          <Route path="/profile">
+            <Route
+              path="me"
+              element={
+                <ProtectedRoute>
+                  <UserProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="account"
+              element={
+                <ProtectedRoute>
+                  <UserAccount />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="settings"
+              element={
+                <ProtectedRoute>
+                  <Settings />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+          <Route path="*" element={<NoMatch />} />
+        </Routes>
+      </Container>
     </>
   );
 }

@@ -6,18 +6,23 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <ClerkProvider frontendApi={process.env.REACT_APP_FRONTEND_CLERK_API_URL}>
+function RootApp() {
+  return (
+    <React.StrictMode>
       <BrowserRouter>
-        <ChakraProvider>
-          <App />
-        </ChakraProvider>
+        <ClerkProvider
+          frontendApi={process.env.REACT_APP_FRONTEND_CLERK_API_URL}
+        >
+          <ChakraProvider>
+            <App />
+          </ChakraProvider>
+        </ClerkProvider>
       </BrowserRouter>
-    </ClerkProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+    </React.StrictMode>
+  );
+}
+
+ReactDOM.render(<RootApp />, document.getElementById("root"));
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
