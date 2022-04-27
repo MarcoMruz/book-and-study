@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 export function UserMenu() {
   return (
     <Menu>
-      <MenuButton as={HamburgerIcon} />
+      <MenuButton as={HamburgerIcon} cursor="pointer" />
       <MenuList>
         <MenuItem as={Link} to="/profile/me">
           Profile
