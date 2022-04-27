@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Container, HStack, Spacer, Button } from "@chakra-ui/react";
 import { SignedIn, UserButton, SignedOut } from "@clerk/clerk-react";
 import { Link } from "react-router-dom";
+import { UserMenu } from "./user-menu";
 
 export function Navigation() {
   return (
@@ -10,6 +11,7 @@ export function Navigation() {
         <HStack>
           <Link to="/">Book &amp; Study</Link>
           <Spacer />
+          <UserMenu />
           <SignedIn>
             <UserButton userProfileUrl="/profile/account" afterSignOutUrl="/" />
           </SignedIn>

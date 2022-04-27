@@ -28,11 +28,8 @@ export function useFetch<T>(
             body: options.body,
             headers: {
               Authorization: `Bearer ${await auth.getToken()}`,
-              Cookie: document.cookie,
               "Content-Type": "application/json",
             },
-            credentials: "include",
-            mode: "cors",
           }).then((res) => res.json());
 
         const response = await authenticatedFetch();

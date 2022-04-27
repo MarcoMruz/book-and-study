@@ -11,6 +11,8 @@ import { UserProfile } from "./routes/profile/me";
 import { ProtectedRoute } from "./components/protected-route";
 import { NoMatch } from "./routes/no-match";
 import { Settings } from "./routes/profile/settings";
+import { MyReservations } from "./routes/reservations/me";
+import { ReserveLab } from "./routes/reservations/reserve-lab";
 
 function App() {
   return (
@@ -47,6 +49,25 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Settings />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+          <Route path="/reservations">
+            <Route
+              path="me"
+              element={
+                <ProtectedRoute>
+                  <MyReservations />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="reserve-lab"
+              element={
+                <ProtectedRoute>
+                  <ReserveLab />
                 </ProtectedRoute>
               }
             />
