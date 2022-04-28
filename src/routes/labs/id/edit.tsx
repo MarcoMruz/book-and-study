@@ -4,49 +4,71 @@ import {
   Button,
   ButtonGroup,
   Heading,
+  HStack,
+  IconButton,
   Input,
+  Progress,
   Text,
   Textarea,
 } from "@chakra-ui/react";
 import { ErrorMessage, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { CloseIcon } from "@chakra-ui/icons";
 import { useExecFetch } from "../../../hooks/use-exec-fetch";
-import { apiUrl } from ".";
-
-const initialValues = {
-  labNumber: "",
-  labName: "",
-  labDescription: "",
-  labCapacity: 0,
-  building: "",
-  floor: 0,
-};
+import { apiUrl } from "../../profile/me";
+import { useFetch } from "../../../hooks/use-fetch";
 
 const validationSchema = Yup.object({
   labNumber: Yup.string().required("Lab number is required"),
   labName: Yup.string().required("Lab name is required"),
   labDescription: Yup.string().required("Lab description is required"),
   labCapacity: Yup.number().required("Lab capacity is required"),
-  building: Yup.string().required("Building is required"),
-  floor: Yup.number().required("Floor is required"),
 });
 
-export function CreateLab() {
+export function EditLab() {
   const navigate = useNavigate();
-  const { execFetch, error, ok } = useExecFetch(`${apiUrl}/create-lab`);
+  const { labId } = useParams();
+  const {
+    data,
+    error: labError,
+    loading,
+  } = useFetch<{ lab: any }>(`${apiUrl}/labs/${labId}`);
+  const { execFetch, error, ok } = useExecFetch(`${apiUrl}/edit-lab/${labId}`);
 
   useEffect(() => {
     if (ok) {
-      navigate("/profile/me/reservations");
+      navigate("/labs");
     }
   }, [ok]);
 
+  if (loading) {
+    return <Progress isIndeterminate />;
+  }
+
+  if (labError || !data) {
+    return <Text color="red">There was problem to load lab</Text>;
+  }
+
+  const initialValues = {
+    labNumber: data.lab.labNumber,
+    labName: data.lab.labName,
+    labDescription: data.lab.labDescription,
+    labCapacity: data.lab.labCapacity,
+  };
+
   return (
     <>
-      <Heading size="lg" mb={5}>
-        Create lab form
-      </Heading>
+      <HStack mb={5}>
+        <IconButton
+          icon={<CloseIcon />}
+          aria-label="back"
+          as={Link}
+          to="/labs"
+          variant="ghost"
+        />
+        <Heading size="lg">Edit lab</Heading>
+      </HStack>
       {error && (
         <Text color="red">
           We could not create lab for you :( Try again please
@@ -114,34 +136,6 @@ export function CreateLab() {
             </Box>
 
             <Box mb={3}>
-              <Input
-                type="text"
-                placeholder="Enter building in which is lab located"
-                name="building"
-                isInvalid={touched.building && errors.building != null}
-                onChange={handleChange}
-                value={values.building}
-              />
-              <ErrorMessage component={Text} name="building">
-                {(msg) => <Text color="red">{msg}</Text>}
-              </ErrorMessage>
-            </Box>
-
-            <Box mb={3}>
-              <Input
-                type="number"
-                placeholder="Enter building on what floor is lab located"
-                name="floor"
-                isInvalid={touched.floor && errors.floor != null}
-                onChange={handleChange}
-                value={values.floor}
-              />
-              <ErrorMessage component={Text} name="floor">
-                {(msg) => <Text color="red">{msg}</Text>}
-              </ErrorMessage>
-            </Box>
-
-            <Box mb={3}>
               <Textarea
                 placeholder="Enter description to better describe lab"
                 name="labDescription"
@@ -167,7 +161,7 @@ export function CreateLab() {
                 disabled={isSubmitting || isValidating}
                 isLoading={isSubmitting || isValidating}
               >
-                Create lab
+                Edit lab
               </Button>
             </ButtonGroup>
           </Form>

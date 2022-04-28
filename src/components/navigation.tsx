@@ -11,7 +11,9 @@ export function Navigation() {
         <HStack>
           <Link to="/">Book &amp; Study</Link>
           <Spacer />
-          <UserMenu />
+          <SignedIn>
+            <UserMenu />
+          </SignedIn>
           <SignedIn>
             <UserButton userProfileUrl="/profile/account" afterSignOutUrl="/" />
           </SignedIn>
