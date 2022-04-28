@@ -5,16 +5,37 @@ import {
   ButtonGroup,
   Heading,
   HStack,
+  IconButton,
   Progress,
   Spacer,
   Text,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { useFetch } from "../../hooks/use-fetch";
 import { apiUrl } from "../profile/me";
 
 export function Labs() {
+  const auth = useAuth();
   const { data, error, loading } = useFetch<{ labs: any[] }>(`${apiUrl}/labs`);
+  const { data: user, error: userError } = useFetch<{
+    user: { isTeacher: boolean };
+  }>(`${apiUrl}/profile/me`);
+
+  const deleteLab = async (labId: string) => {
+    fetch(`${apiUrl}/delete-lab/${labId}`, {
+      method: "delete",
+      headers: {
+        Authorization: `Bearer ${await auth.getToken()}`,
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      if (res.status === 200) {
+        window.location.reload();
+      }
+    });
+  };
 
   if (loading) {
     return <Progress />;
@@ -47,6 +68,7 @@ export function Labs() {
             boxShadow="md"
             px={6}
             py={4}
+            mb={5}
           >
             <HStack spacing={3}>
               <Heading size="lg">{lab.labName}</Heading>
@@ -54,16 +76,26 @@ export function Labs() {
                 {lab.building} - {lab.floor} / {lab.labCapacity} seats
               </Text>
             </HStack>
-            <Text>
-              Owner: {lab.owner.name} - {lab.owner.email}
-            </Text>
             <Text color="gray.300">{lab.labDescription}</Text>
             <HStack>
               <Spacer />
               <ButtonGroup>
-                <Button as={Link} to={`/labs/${lab.id}/free-slots`}>
-                  See free slots
-                </Button>
+                {!userError && user?.user?.isTeacher && (
+                  <>
+                    <IconButton
+                      aria-label="delete"
+                      icon={<DeleteIcon />}
+                      colorScheme="red"
+                      onClick={() => deleteLab(lab.id)}
+                    />
+                    <IconButton
+                      aria-label="edit"
+                      icon={<EditIcon />}
+                      as={Link}
+                      to={`/labs/${lab.id}/edit`}
+                    />
+                  </>
+                )}
                 <Button
                   as={Link}
                   to={`/labs/${lab.id}/reserve`}
