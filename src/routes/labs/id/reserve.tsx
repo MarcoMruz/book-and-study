@@ -10,7 +10,7 @@ import {
 import { ErrorMessage, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useParams } from "react-router-dom";
-import { usePost } from "../../../hooks/use-post";
+import { useExecFetch } from "../../../hooks/use-exec-fetch";
 import { apiUrl } from "../../profile/me";
 
 const initialValues = {
@@ -32,7 +32,9 @@ const validationSchema = Yup.object({
 export function ReserveLab() {
   const navigate = useNavigate();
   const { labId } = useParams();
-  const { execPost, error, ok } = usePost(`${apiUrl}/reserve-lab/${labId}`);
+  const { execFetch, error, ok } = useExecFetch(
+    `${apiUrl}/reserve-lab/${labId}`
+  );
 
   useEffect(() => {
     if (ok === true) {
@@ -54,7 +56,7 @@ export function ReserveLab() {
         validationSchema={validationSchema}
         initialValues={initialValues}
         onSubmit={(formValues) => {
-          execPost({
+          execFetch({
             body: {
               name: formValues.name,
               email: formValues.email,
