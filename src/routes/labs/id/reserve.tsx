@@ -37,7 +37,7 @@ export function ReserveLab() {
   );
 
   useEffect(() => {
-    if (!error) {
+    if (ok) {
       navigate("/profile/me/reservations");
     }
   }, [ok, error]);
@@ -75,6 +75,7 @@ export function ReserveLab() {
           isSubmitting,
           isValidating,
           resetForm,
+          touched,
         }) => (
           <Form>
             <Box mb={3}>
@@ -82,7 +83,7 @@ export function ReserveLab() {
                 type="text"
                 placeholder="Enter your name"
                 name="name"
-                isInvalid={errors.name != null}
+                isInvalid={touched.name && errors.name != null}
                 onChange={handleChange}
                 value={values.name}
               />
@@ -96,7 +97,7 @@ export function ReserveLab() {
                 type="email"
                 placeholder="Enter your email"
                 name="email"
-                isInvalid={errors.email != null}
+                isInvalid={touched.email && errors.email != null}
                 onChange={handleChange}
                 value={values.email}
               />
@@ -111,7 +112,7 @@ export function ReserveLab() {
                 placeholder="Enter start time"
                 name="startTime"
                 min={minValueOfDate}
-                isInvalid={errors.startTime != null}
+                isInvalid={touched.startTime && errors.startTime != null}
                 onChange={handleChange}
                 value={values.startTime}
               />
@@ -127,7 +128,7 @@ export function ReserveLab() {
                 placeholder="Enter end time"
                 name="endTime"
                 min={values.startTime || minValueOfDate}
-                isInvalid={errors.endTime != null}
+                isInvalid={touched.endTime && errors.endTime != null}
                 onChange={handleChange}
                 value={values.endTime}
               />

@@ -24,7 +24,7 @@ export function UserMenu() {
           Labs
         </MenuItem>
         {data?.user?.isTeacher && (
-          <MenuItem as={Link} to="/profile/create-lab">
+          <MenuItem as={Link} to="/profile/me/create-lab">
             Create lab
           </MenuItem>
         )}

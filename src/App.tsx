@@ -19,6 +19,7 @@ import { CreateLab } from "./routes/profile/me/create-lab";
 import { TeacherProtectedRoute } from "./components/teacher-protected-route";
 import { Teachers } from "./routes/teacher";
 import { TeacherDetail } from "./routes/teacher/teacherId";
+import { EditLab } from "./routes/labs/id/edit";
 
 function App() {
   return (
@@ -51,6 +52,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="create-lab"
+                element={
+                  <TeacherProtectedRoute>
+                    <CreateLab />
+                  </TeacherProtectedRoute>
+                }
+              />
             </Route>
             <Route
               path="account"
@@ -58,14 +67,6 @@ function App() {
                 <ProtectedRoute>
                   <UserAccount />
                 </ProtectedRoute>
-              }
-            />
-            <Route
-              path="create-lab"
-              element={
-                <TeacherProtectedRoute>
-                  <CreateLab />
-                </TeacherProtectedRoute>
               }
             />
           </Route>
@@ -76,7 +77,7 @@ function App() {
           <Route path="/labs" element={<Labs />} />
           <Route path="/labs/:labId" element={<LabDetail />} />
           <Route path="/labs/:labId/reserve" element={<ReserveLab />} />
-          <Route path="/labs:labId/free-slots" element={<LabDetail />} />
+          <Route path="/labs/:labId/edit" element={<EditLab />} />
 
           <Route path="*" element={<NoMatch />} />
         </Routes>

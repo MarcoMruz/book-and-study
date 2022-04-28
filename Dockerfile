@@ -1,10 +1,11 @@
-FROM node:16
+FROM node:16 
 
-WORKDIR /src
+WORKDIR /book-and-study
+
+COPY package.json yarn.lock ./
+
+RUN yarn install
 
 COPY . .
 
-RUN yarn
-
-EXPOSE 3000
 CMD [ "yarn", "start" ]
