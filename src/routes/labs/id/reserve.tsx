@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { Button, Heading, Input, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Heading,
+  Input,
+  Text,
+} from "@chakra-ui/react";
 import { ErrorMessage, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useParams, useNavigate } from "react-router-dom";
@@ -15,12 +22,12 @@ const initialValues = {
   userId: "",
 };
 
-const validationSchema = {
+const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
   startTime: Yup.number().required("Start time is required"),
   endTime: Yup.number().required("End time is required"),
-};
+});
 
 export function ReserveLab() {
   const navigate = useNavigate();
@@ -50,60 +57,85 @@ export function ReserveLab() {
           });
         }}
       >
-        {({ errors, handleChange, values, isSubmitting, isValidating }) => (
+        {({
+          errors,
+          handleChange,
+          values,
+          isSubmitting,
+          isValidating,
+          resetForm,
+        }) => (
           <Form>
-            <Input
-              mb={3}
-              type="text"
-              placeholder="Enter your name"
-              name="name"
-              isInvalid={errors.name != null}
-              onChange={handleChange}
-              value={values.name}
-            />
-            <ErrorMessage name="name" />
+            <Box mb={3}>
+              <Input
+                type="text"
+                placeholder="Enter your name"
+                name="name"
+                isInvalid={errors.name != null}
+                onChange={handleChange}
+                value={values.name}
+              />
+              <ErrorMessage component={Text} name="name">
+                {(msg) => <Text color="red">{msg}</Text>}
+              </ErrorMessage>
+            </Box>
 
-            <Input
-              mb={3}
-              type="email"
-              placeholder="Enter your email"
-              name="email"
-              isInvalid={errors.email != null}
-              onChange={handleChange}
-              value={values.email}
-            />
-            <ErrorMessage name="email" />
+            <Box mb={3}>
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                name="email"
+                isInvalid={errors.email != null}
+                onChange={handleChange}
+                value={values.email}
+              />
+              <ErrorMessage component={Text} name="email">
+                {(msg) => <Text color="red">{msg}</Text>}
+              </ErrorMessage>
+            </Box>
 
-            <Input
-              mb={3}
-              type="datetime-local"
-              placeholder="Enter start time"
-              name="startTime"
-              isInvalid={errors.startTime != null}
-              onChange={handleChange}
-              value={values.startTime}
-            />
-            <ErrorMessage name="startTime" />
+            <Box mb={3}>
+              <Input
+                type="datetime-local"
+                placeholder="Enter start time"
+                name="startTime"
+                isInvalid={errors.startTime != null}
+                onChange={handleChange}
+                value={values.startTime}
+              />
+              <ErrorMessage component={Text} name="startTime">
+                {(msg) => <Text color="red">{msg}</Text>}
+              </ErrorMessage>
+            </Box>
 
-            <Input
-              mb={3}
-              type="datetime-local"
-              placeholder="Enter end time"
-              name="endTime"
-              isInvalid={errors.endTime != null}
-              onChange={handleChange}
-              value={values.endTime}
-            />
-            <ErrorMessage name="endTime" />
+            <Box mb={3}>
+              <Input
+                mb={3}
+                type="datetime-local"
+                placeholder="Enter end time"
+                name="endTime"
+                isInvalid={errors.endTime != null}
+                onChange={handleChange}
+                value={values.endTime}
+              />
+              <ErrorMessage component={Text} name="endTime">
+                {(msg) => <Text color="red">{msg}</Text>}
+              </ErrorMessage>
+            </Box>
 
             <Input hidden type="submit" />
-            <Button
-              colorScheme="blue"
-              type="submit"
-              disabled={isSubmitting || isValidating}
-            >
-              Reserve lab
-            </Button>
+            <ButtonGroup float="right" mb={5}>
+              <Button type="button" onClick={() => resetForm()}>
+                Reset
+              </Button>
+              <Button
+                colorScheme="blue"
+                type="submit"
+                disabled={isSubmitting || isValidating}
+              >
+                Reserve lab
+              </Button>
+            </ButtonGroup>
           </Form>
         )}
       </Formik>
