@@ -1,15 +1,15 @@
 import { useAuth } from "@clerk/clerk-react";
 import { useState } from "react";
 
-export function usePost(url: string) {
+export function useExecFetch(url: string) {
   const [ok, setOk] = useState(false);
   const [error, setError] = useState<boolean>(false);
   const auth = useAuth();
-  let execPost: ({
+  let execFetch: ({
     method,
     body,
   }: {
-    method?: "POST" | "DELETE";
+    method?: "POST" | "DELETE" | "GET";
     body: Record<string, any>;
   }) => void = () => {};
 
@@ -17,7 +17,7 @@ export function usePost(url: string) {
     method = "POST",
     body,
   }: {
-    method?: "POST" | "DELETE";
+    method?: "POST" | "DELETE" | "GET";
     body?: Record<string, any>;
   }) =>
     fetch(url, {
@@ -28,10 +28,16 @@ export function usePost(url: string) {
       },
       ...(body && { body: JSON.stringify(body) }),
     })
-      .then(() => setOk(true))
+      .then((res) => {
+        if (!res.ok) {
+          setError(true);
+        } else {
+          setOk(true);
+        }
+      })
       .catch(() => setError(true));
 
-  execPost = authenticatedFetch;
+  execFetch = authenticatedFetch;
 
-  return { ok, error, execPost };
+  return { ok, error, execFetch };
 }

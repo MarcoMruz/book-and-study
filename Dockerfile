@@ -1,4 +1,4 @@
-FROM node:14.18 as builder 
+FROM node:16 
 
 WORKDIR /book-and-study
 
@@ -8,5 +8,4 @@ RUN yarn install
 
 COPY . .
 
-# tak ako spustas frontend
 CMD [ "yarn", "start" ]
