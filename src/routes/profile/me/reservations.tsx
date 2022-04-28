@@ -13,11 +13,13 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { useAuth } from "@clerk/clerk-react";
 import dayjs from "dayjs";
 import { apiUrl } from ".";
 import { useFetch } from "../../../hooks/use-fetch";
 
 export function MyReservations() {
+  const auth = useAuth();
   const { data, error, loading } = useFetch<{ reservations: any[] }>(
     `${apiUrl}/reservations/me`
   );
@@ -27,6 +29,10 @@ export function MyReservations() {
       `${apiUrl}/cancel-reservations/${reservationId}`,
       {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${await auth.getToken()}`,
+        },
       }
     );
 

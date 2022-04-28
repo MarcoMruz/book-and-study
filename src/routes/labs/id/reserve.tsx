@@ -1,15 +1,7 @@
 import React, { useEffect } from "react";
-import {
-  Button,
-  FormErrorMessage,
-  Heading,
-  Input,
-  InputGroup,
-  Text,
-} from "@chakra-ui/react";
-import { Form, useFormik } from "formik";
+import { Button, Heading, Input, Text } from "@chakra-ui/react";
+import { ErrorMessage, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { useUser } from "@clerk/clerk-react";
 import { useParams, useNavigate } from "react-router-dom";
 import { usePost } from "../../../hooks/use-post";
 import { apiUrl } from "../../profile/me";
@@ -33,22 +25,7 @@ const validationSchema = {
 export function ReserveLab() {
   const navigate = useNavigate();
   const { labId } = useParams();
-  const { user } = useUser();
   const { execPost, error, ok } = usePost(`${apiUrl}/${labId}/reserve-lab`);
-
-  const { handleChange, values, handleSubmit, errors } = useFormik({
-    validationSchema,
-    initialValues,
-    onSubmit: (formValues) => {
-      execPost(
-        JSON.stringify({
-          ...formValues,
-          labId,
-          userId: user?.id,
-        })
-      );
-    },
-  });
 
   useEffect(() => {
     if (ok) {
@@ -58,61 +35,78 @@ export function ReserveLab() {
 
   return (
     <>
-      <Heading size="md">Reservation form</Heading>
-      {error && <Text>We could not create </Text>}
-      <Form onSubmit={handleSubmit}>
-        <InputGroup>
-          <Input
-            placeholder="Enter your name"
-            name="name"
-            isInvalid={errors.name != null}
-            onChange={handleChange}
-            value={values.name}
-          />
-          <FormErrorMessage>{errors.name}</FormErrorMessage>
-        </InputGroup>
+      <Heading size="lg" mb={5}>
+        Reservation form
+      </Heading>
+      {error && <Text>We could not reserve lab for you :(</Text>}
+      <Formik
+        validationSchema={validationSchema}
+        initialValues={initialValues}
+        onSubmit={(formValues) => {
+          execPost({
+            body: {
+              ...formValues,
+            },
+          });
+        }}
+      >
+        {({ errors, handleChange, values, isSubmitting, isValidating }) => (
+          <Form>
+            <Input
+              mb={3}
+              type="text"
+              placeholder="Enter your name"
+              name="name"
+              isInvalid={errors.name != null}
+              onChange={handleChange}
+              value={values.name}
+            />
+            <ErrorMessage name="name" />
 
-        <InputGroup>
-          <Input
-            type="email"
-            placeholder="Enter your email"
-            name="email"
-            isInvalid={errors.email != null}
-            onChange={handleChange}
-            value={values.email}
-          />
-          <FormErrorMessage>{errors.email}</FormErrorMessage>
-        </InputGroup>
+            <Input
+              mb={3}
+              type="email"
+              placeholder="Enter your email"
+              name="email"
+              isInvalid={errors.email != null}
+              onChange={handleChange}
+              value={values.email}
+            />
+            <ErrorMessage name="email" />
 
-        <InputGroup>
-          <Input
-            type="datetime-local"
-            placeholder="Enter start time"
-            name="startTime"
-            isInvalid={errors.startTime != null}
-            onChange={handleChange}
-            value={values.startTime}
-          />
-          <FormErrorMessage>{errors.startTime}</FormErrorMessage>
-        </InputGroup>
+            <Input
+              mb={3}
+              type="datetime-local"
+              placeholder="Enter start time"
+              name="startTime"
+              isInvalid={errors.startTime != null}
+              onChange={handleChange}
+              value={values.startTime}
+            />
+            <ErrorMessage name="startTime" />
 
-        <InputGroup>
-          <Input
-            type="datetime-local"
-            placeholder="Enter end time"
-            name="endTime"
-            isInvalid={errors.endTime != null}
-            onChange={handleChange}
-            value={values.endTime}
-          />
-          <FormErrorMessage>{errors.endTime}</FormErrorMessage>
-        </InputGroup>
+            <Input
+              mb={3}
+              type="datetime-local"
+              placeholder="Enter end time"
+              name="endTime"
+              isInvalid={errors.endTime != null}
+              onChange={handleChange}
+              value={values.endTime}
+            />
+            <ErrorMessage name="endTime" />
 
-        <Input hidden type="submit" />
-        <Button colorScheme="blue" type="submit">
-          Reserve lab
-        </Button>
-      </Form>
+            <Input hidden type="submit" />
+            <Button
+              colorScheme="blue"
+              type="submit"
+              disabled={isSubmitting || isValidating}
+            >
+              Reserve lab
+            </Button>
+          </Form>
+        )}
+      </Formik>
     </>
   );
 }

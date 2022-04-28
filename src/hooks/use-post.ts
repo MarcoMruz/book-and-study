@@ -5,17 +5,29 @@ export function usePost(url: string) {
   const [ok, setOk] = useState(false);
   const [error, setError] = useState<boolean>(false);
   const auth = useAuth();
-  let execPost: (body: string) => void = () => {};
+  let execPost: ({
+    method,
+    body,
+  }: {
+    method?: "POST" | "DELETE";
+    body: Record<string, any>;
+  }) => void = () => {};
 
   useEffect(() => {
-    const authenticatedFetch = async (body: string) =>
+    const authenticatedFetch = async ({
+      method = "POST",
+      body,
+    }: {
+      method?: "POST" | "DELETE";
+      body?: Record<string, any>;
+    }) =>
       fetch(url, {
-        method: "POST",
+        method,
         headers: {
           Authorization: `Bearer ${await auth.getToken()}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(body),
+        ...(body && { body: JSON.stringify(body) }),
       })
         .then(() => setOk(true))
         .catch(() => setError(true));
