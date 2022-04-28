@@ -28,7 +28,13 @@ export function useExecFetch(url: string) {
       },
       ...(body && { body: JSON.stringify(body) }),
     })
-      .then(() => setOk(true))
+      .then((res) => {
+        if (!res.ok) {
+          setError(true);
+        } else {
+          setOk(true);
+        }
+      })
       .catch(() => setError(true));
 
   execFetch = authenticatedFetch;

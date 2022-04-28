@@ -37,7 +37,7 @@ export function ReserveLab() {
   );
 
   useEffect(() => {
-    if (ok === true) {
+    if (!error) {
       navigate("/profile/me/reservations");
     }
   }, [ok, error]);
@@ -50,7 +50,9 @@ export function ReserveLab() {
         Reservation form
       </Heading>
       {error && (
-        <Text>We could not reserve lab for you :( Try again please</Text>
+        <Text color="red">
+          We could not reserve lab for you :( Try again please
+        </Text>
       )}
       <Formik
         validationSchema={validationSchema}
