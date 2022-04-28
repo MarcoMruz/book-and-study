@@ -9,15 +9,15 @@ import {
 } from "@chakra-ui/react";
 import { ErrorMessage, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { usePost } from "../../../hooks/use-post";
 import { apiUrl } from "../../profile/me";
 
 const initialValues = {
   name: "",
   email: "",
-  startTime: Date.now(),
-  endTime: Date.now(),
+  startTime: "",
+  endTime: "",
   labId: "",
   userId: "",
 };
@@ -25,34 +25,41 @@ const initialValues = {
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
-  startTime: Yup.number().required("Start time is required"),
-  endTime: Yup.number().required("End time is required"),
+  startTime: Yup.string().required("Start time is required"),
+  endTime: Yup.string().required("End time is required"),
 });
 
 export function ReserveLab() {
   const navigate = useNavigate();
   const { labId } = useParams();
-  const { execPost, error, ok } = usePost(`${apiUrl}/${labId}/reserve-lab`);
+  const { execPost, error, ok } = usePost(`${apiUrl}/reserve-lab/${labId}`);
 
   useEffect(() => {
-    if (ok) {
+    if (ok === true) {
       navigate("/profile/me/reservations");
     }
   }, [ok, error]);
+
+  const minValueOfDate = new Date().toISOString();
 
   return (
     <>
       <Heading size="lg" mb={5}>
         Reservation form
       </Heading>
-      {error && <Text>We could not reserve lab for you :(</Text>}
+      {error && (
+        <Text>We could not reserve lab for you :( Try again please</Text>
+      )}
       <Formik
         validationSchema={validationSchema}
         initialValues={initialValues}
         onSubmit={(formValues) => {
           execPost({
             body: {
-              ...formValues,
+              name: formValues.name,
+              email: formValues.email,
+              startTime: new Date(formValues.startTime),
+              endTime: new Date(formValues.endTime),
             },
           });
         }}
@@ -99,6 +106,7 @@ export function ReserveLab() {
                 type="datetime-local"
                 placeholder="Enter start time"
                 name="startTime"
+                min={minValueOfDate}
                 isInvalid={errors.startTime != null}
                 onChange={handleChange}
                 value={values.startTime}
@@ -114,6 +122,7 @@ export function ReserveLab() {
                 type="datetime-local"
                 placeholder="Enter end time"
                 name="endTime"
+                min={values.startTime || minValueOfDate}
                 isInvalid={errors.endTime != null}
                 onChange={handleChange}
                 value={values.endTime}
