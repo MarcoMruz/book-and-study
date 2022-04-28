@@ -28,6 +28,9 @@ export function UserMenu() {
             Create lab
           </MenuItem>
         )}
+        <MenuItem as={Link} to="/teacher">
+          Where is teacher?
+        </MenuItem>
       </MenuList>
     </Menu>
   );

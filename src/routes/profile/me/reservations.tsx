@@ -129,7 +129,7 @@ export function MyReservations() {
         <HStack>
           <Text>You have no reservations</Text>
           <Spacer />
-          <Button as={Link} to="/profile/me/reserve-lab">
+          <Button as={Link} to="/labs">
             Create one
           </Button>
         </HStack>

@@ -17,6 +17,8 @@ import { LabDetail } from "./routes/labs/id";
 import { Labs } from "./routes/labs";
 import { CreateLab } from "./routes/profile/me/create-lab";
 import { TeacherProtectedRoute } from "./components/teacher-protected-route";
+import { Teachers } from "./routes/teacher";
+import { TeacherDetail } from "./routes/teacher/teacherId";
 
 function App() {
   return (
@@ -67,6 +69,9 @@ function App() {
               }
             />
           </Route>
+            <Route path="/teacher" element={<Teachers />}>
+                <Route path=":teacherId" element={<TeacherDetail />}/>
+            </Route>
 
           <Route path="/labs" element={<Labs />} />
           <Route path="/labs/:labId" element={<LabDetail />} />
