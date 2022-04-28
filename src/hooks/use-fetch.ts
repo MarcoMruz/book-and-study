@@ -1,15 +1,7 @@
 import { useAuth } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
 
-type FetchOptions = {
-  method?: string;
-  body?: any;
-};
-
-export function useFetch<T>(
-  url: string,
-  options: FetchOptions = { method: "GET" }
-) {
+export function useFetch<T>(url: string) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -24,8 +16,7 @@ export function useFetch<T>(
         }
         const authenticatedFetch = async () =>
           fetch(url, {
-            method: options.method,
-            body: options.body,
+            method: "GET",
             headers: {
               Authorization: `Bearer ${await auth.getToken()}`,
               "Content-Type": "application/json",

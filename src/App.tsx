@@ -10,9 +10,13 @@ import { Navigation } from "./components/navigation";
 import { UserProfile } from "./routes/profile/me";
 import { ProtectedRoute } from "./components/protected-route";
 import { NoMatch } from "./routes/no-match";
-import { Settings } from "./routes/profile/settings";
-import { MyReservations } from "./routes/reservations/me";
-import { ReserveLab } from "./routes/reservations/reserve-lab";
+import { Settings } from "./routes/profile/me/settings";
+import { MyReservations } from "./routes/profile/me/reservations";
+import { ReserveLab } from "./routes/labs/id/reserve";
+import { LabDetail } from "./routes/labs/id";
+import { Labs } from "./routes/labs";
+import { CreateLab } from "./routes/profile/me/create-lab";
+import { TeacherProtectedRoute } from "./components/teacher-protected-route";
 
 function App() {
   return (
@@ -35,7 +39,17 @@ function App() {
                   <UserProfile />
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route path="settings" element={<Settings />} />
+              <Route
+                path="reservations"
+                element={
+                  <ProtectedRoute>
+                    <MyReservations />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
             <Route
               path="account"
               element={
@@ -45,33 +59,20 @@ function App() {
               }
             />
             <Route
-              path="settings"
+              path="create-lab"
               element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
+                <TeacherProtectedRoute>
+                  <CreateLab />
+                </TeacherProtectedRoute>
               }
             />
           </Route>
-          <Route path="/reservations">
-            <Route
-              path="me"
-              element={
-                <ProtectedRoute>
-                  <MyReservations />
-                </ProtectedRoute>
-              }
-            />
 
-            <Route
-              path="reserve-lab"
-              element={
-                <ProtectedRoute>
-                  <ReserveLab />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
+          <Route path="/labs" element={<Labs />} />
+          <Route path="/labs/:labId" element={<LabDetail />} />
+          <Route path="/labs/:labId/reserve" element={<ReserveLab />} />
+          <Route path="/labs:labId/free-slots" element={<LabDetail />} />
+
           <Route path="*" element={<NoMatch />} />
         </Routes>
       </Container>

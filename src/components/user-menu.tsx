@@ -8,17 +8,14 @@ export function UserMenu() {
     <Menu>
       <MenuButton as={HamburgerIcon} cursor="pointer" />
       <MenuList>
-        <MenuItem as={Link} to="/profile/me">
-          Profile
+        <MenuItem as={Link} to="/profile/me/reservations">
+          Profile &amp; reservations
         </MenuItem>
         <MenuItem as={Link} to="/profile/account">
           Account
         </MenuItem>
-        <MenuItem as={Link} to="/reservations/me">
-          My reservations
-        </MenuItem>
-        <MenuItem as={Link} to="/reservations/reserve-lab">
-          Reserve lab
+        <MenuItem as={Link} to="/labs">
+          Labs
         </MenuItem>
         <MenuItem>Where is teacher?</MenuItem>
       </MenuList>
